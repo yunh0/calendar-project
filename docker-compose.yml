@@ -1,0 +1,17 @@
+version: '3'
+
+services:
+  mysql:
+    container_name: calendar_db
+    image: mysql:8.0.37
+    environment:
+      MYSQL_ROOT_HOST: '%'
+      MYSQL_DATABASE: "calendar_db"
+      MYSQL_ROOT_PASSWORD: "dbsghdla1!"
+      TZ: 'Asia/Seoul'
+    ports:
+      - "3306:3306"
+    command:
+      - "mysqld"
+      - "--character-set-server=utf8mb4"
+      - "--collation-server=utf8mb4_unicode_ci"
