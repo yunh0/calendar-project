@@ -1,23 +1,23 @@
 package com.yunho.project.calendar.core;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import com.yunho.project.calendar.core.domain.entity.BaseEntity;
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 @Entity
-@Setter
-@Getter
-@ToString
-public class SimpleEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class SimpleEntity extends BaseEntity {
 
     private String name;
 
+    public String getName(){
+        return name;
+    }
+
+    @Override
+    public String toString(){
+        return "SimpleEntity{" +
+                "name='" + name + '\'' +
+                super.getCreatedAt() +
+                '}';
+    }
 }
