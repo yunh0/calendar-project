@@ -3,7 +3,6 @@ package com.yunho.project.calendar.core.domain;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -15,5 +14,5 @@ public class Task {
     private String title;
     private String description;
     private User writer;
-    private LocalDate createdAt;
+    private LocalDateTime createdAt;
 }
