@@ -31,18 +31,6 @@ public class User extends BaseEntity {
         this.birthday = birthday;
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public LocalDate getBirthday() {
-        return birthday;
-    }
-
     public boolean isMatched(Encryptor encryptor, String pw) {
         return encryptor.isMatch(pw, this.password);
     }
