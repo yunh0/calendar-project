@@ -1,5 +1,6 @@
 package com.yunho.project.calendar.core.domain.entity;
 
+import com.yunho.project.calendar.core.util.Encryptor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -29,4 +30,9 @@ public class User extends BaseEntity {
         this.password = password;
         this.birthday = birthday;
     }
+
+    public boolean isMatched(Encryptor encryptor, String pw) {
+        return encryptor.isMatch(pw, this.password);
+    }
+
 }
