@@ -1,42 +1,17 @@
 package com.yunho.project.calendar.core.domain;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.yunho.project.calendar.core.domain.entity.Schedule;
+import com.yunho.project.calendar.core.domain.entity.User;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-
-@Getter
-@NoArgsConstructor
 public class Event {
 
-    private Long id;
-    private LocalDateTime startAt;
-    private LocalDateTime endAt;
-    private String title;
-    private String description;
-    private User writer;
-    private List<Engagement> engagements;
-    private LocalDateTime createdAt;
+    private Schedule schedule;
 
-    public Event(Long id, LocalDateTime startAt, LocalDateTime endAt, String title,
-                    String description, User writer,
-                    List<Engagement> engagements, LocalDateTime createdAt) {
-        this.id = id;
-        this.startAt = startAt;
-        this.endAt = endAt;
-        this.title = title;
-        this.description = description;
-        this.writer = writer;
-        this.engagements = engagements;
-        this.createdAt = createdAt;
+    public Event(Schedule schedule) {
+        this.schedule = schedule;
     }
 
-    public void addEngagement(Engagement engagement) {
-        if (this.getEngagements() == null) {
-            this.engagements = new ArrayList<>();
-        }
-        this.engagements.add(engagement);
+    public User getWriter() {
+        return this.schedule.getWriter();
     }
 }

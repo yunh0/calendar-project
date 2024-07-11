@@ -1,18 +1,19 @@
 package com.yunho.project.calendar.core.domain;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import com.yunho.project.calendar.core.domain.entity.Schedule;
+import com.yunho.project.calendar.core.domain.entity.User;
 
 import java.time.LocalDateTime;
 
-@Getter
-@NoArgsConstructor
 public class Task {
 
-    private Long id;
-    private LocalDateTime taskAt;
-    private String title;
-    private String description;
-    private User writer;
-    private LocalDateTime createdAt;
+    private Schedule schedule;
+
+    public Task (Schedule schedule) {
+        this.schedule = schedule;
+    }
+
+    public User getWriter() {
+        return this.schedule.getWriter();
+    }
 }
