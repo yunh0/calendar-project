@@ -15,7 +15,7 @@ import static java.util.stream.Collectors.toList;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class NotificationCreateReq {
+public class CreateNotificationReq {
     private String title;
     private LocalDateTime notifyAt;
     private RepeatInfo repeatInfo;
