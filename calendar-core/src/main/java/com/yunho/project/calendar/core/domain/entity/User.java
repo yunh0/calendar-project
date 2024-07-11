@@ -11,11 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
-public class User {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class User extends BaseEntity {
 
     private String name;
 
@@ -25,10 +21,7 @@ public class User {
 
     private LocalDate birthday;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
-
-    public User(Long id, String name, String email, String password, LocalDate birthday) {
-        this.id = id;
+    public User(String name, String email, String password, LocalDate birthday) {
         this.name = name;
         this.email = email;
         this.password = password;

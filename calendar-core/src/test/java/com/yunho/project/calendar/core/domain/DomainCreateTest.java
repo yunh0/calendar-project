@@ -11,12 +11,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class DomainCreateTest {
 
     private LocalDateTime now = LocalDateTime.now();
-    private User user1 = new User(1L,
+    private User user1 = new User(
             "user1",
             "email@email",
             "password",
-            LocalDateTime.now()
-                    .toLocalDate());
+            LocalDateTime.now().toLocalDate());
 
     @Test
     void createDomainFromSchedule() {

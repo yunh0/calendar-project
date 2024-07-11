@@ -5,6 +5,7 @@ import com.yunho.project.calendar.core.SimpleEntityRepository;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
+import org.springframework.data.jpa.repository.config.EnableJpaAuditing;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@EnableJpaAuditing
 @EntityScan("com.yunho.project.calendar.core")
 @EnableJpaRepositories("com.yunho.project.calendar.core")
 @RestController
@@ -31,9 +33,7 @@ public class ApiApplication {
 
     @PostMapping("/save")
     public SimpleEntity saveOne(){
-        final SimpleEntity e = new SimpleEntity();
-        e.setName("hello");
-        return repository.save(e);
+        return repository.save(new SimpleEntity());
     }
 
 
