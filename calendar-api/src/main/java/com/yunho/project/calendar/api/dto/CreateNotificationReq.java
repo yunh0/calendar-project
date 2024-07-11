@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -16,8 +18,13 @@ import static java.util.stream.Collectors.toList;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateNotificationReq {
+
+    @NotBlank
     private String title;
+
+    @NotNull
     private LocalDateTime notifyAt;
+
     private RepeatInfo repeatInfo;
 
     public List<LocalDateTime> getRepeatTimes() {
