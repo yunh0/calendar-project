@@ -1,6 +1,8 @@
 package com.yunho.project.calendar.api.config;
 
 import com.yunho.project.calendar.api.dto.AuthUser;
+import com.yunho.project.calendar.core.exception.CalendarException;
+import com.yunho.project.calendar.core.exception.ErrorCode;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -23,7 +25,7 @@ public class AuthUserResolver implements HandlerMethodArgumentResolver {
         if (userId != null) {
             return AuthUser.of(userId);
         } else {
-            throw new RuntimeException("bad request. no session");
+            throw new CalendarException(ErrorCode.BAD_REQUEST);
         }
     }
 }

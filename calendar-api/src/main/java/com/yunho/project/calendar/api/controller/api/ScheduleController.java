@@ -1,18 +1,19 @@
 package com.yunho.project.calendar.api.controller.api;
 
-import com.yunho.project.calendar.api.dto.AuthUser;
-import com.yunho.project.calendar.api.dto.EventCreateReq;
-import com.yunho.project.calendar.api.dto.NotificationCreateReq;
-import com.yunho.project.calendar.api.dto.TaskCreateReq;
+import com.yunho.project.calendar.api.dto.*;
 import com.yunho.project.calendar.api.service.EventService;
 import com.yunho.project.calendar.api.service.NotificationService;
+import com.yunho.project.calendar.api.service.ScheduleQueryService;
 import com.yunho.project.calendar.api.service.TaskService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
+import java.time.LocalDate;
+import java.time.YearMonth;
+import java.util.List;
 
 @RequiredArgsConstructor
 @RequestMapping("/api/schedules")
@@ -22,25 +23,50 @@ public class ScheduleController {
     private final TaskService taskService;
     private final EventService eventService;
     private final NotificationService notificationService;
+    private final ScheduleQueryService scheduleQueryService;
 
     @PostMapping("/tasks")
-    public ResponseEntity<Void> createTask(@RequestBody TaskCreateReq taskCreateReq,
+    public ResponseEntity<Void> createTask(@Valid  @RequestBody CreateTaskReq createTaskReq,
                                             AuthUser authUser) {
-        taskService.create(taskCreateReq, authUser);
+        taskService.create(createTaskReq, authUser);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/events")
-    public ResponseEntity<Void> createTask(@RequestBody EventCreateReq eventCreateReq,
+    public ResponseEntity<Void> createTask(@Valid @RequestBody CreateEventReq createEventReq,
                                             AuthUser authUser) {
-        eventService.create(eventCreateReq, authUser);
+        eventService.create(createEventReq, authUser);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/notifications")
     public ResponseEntity<Void> createTask(
-            @RequestBody NotificationCreateReq notificationCreateReq, AuthUser authUser) {
-        notificationService.create(notificationCreateReq, authUser);
+            @Valid @RequestBody CreateNotificationReq createNotificationReq, AuthUser authUser) {
+        notificationService.create(createNotificationReq, authUser);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/day")
+    public List<ForListScheduleDto> getSchedulesByDay(
+            AuthUser authUser,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date
+    ) {
+        return scheduleQueryService.getSchedulesByDay(date == null ? LocalDate.now() : date, authUser);
+    }
+
+    @GetMapping("/week")
+    public List<ForListScheduleDto> getSchedulesByWeek(
+            AuthUser authUser,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startOfWeek
+    ) {
+        return scheduleQueryService.getSchedulesByWeek(startOfWeek == null ? LocalDate.now() : startOfWeek, authUser);
+    }
+
+    @GetMapping("/month")
+    public List<ForListScheduleDto> getSchedulesByMonth(
+            AuthUser authUser,
+            @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM") String yearMonth
+    ) {
+        return scheduleQueryService.getSchedulesByMonth(yearMonth == null ? YearMonth.now() : YearMonth.parse(yearMonth), authUser);
     }
 }

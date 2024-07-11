@@ -1,10 +1,14 @@
 package com.yunho.project.calendar.api.dto;
 
 import com.yunho.project.calendar.core.domain.type.TimeUnit;
+import com.yunho.project.calendar.core.exception.CalendarException;
+import com.yunho.project.calendar.core.exception.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -15,9 +19,14 @@ import static java.util.stream.Collectors.toList;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class NotificationCreateReq {
+public class CreateNotificationReq {
+
+    @NotBlank
     private String title;
+
+    @NotNull
     private LocalDateTime notifyAt;
+
     private RepeatInfo repeatInfo;
 
     public List<LocalDateTime> getRepeatTimes() {
@@ -37,7 +46,7 @@ public class NotificationCreateReq {
                                 case YEAR:
                                     return notifyAt.plusYears(increment);
                                 default:
-                                    throw new RuntimeException("bad request. not matched time unit");
+                                    throw new CalendarException(ErrorCode.BAD_REQUEST);
                             }
                         }
                 )
