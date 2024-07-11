@@ -1,5 +1,6 @@
 package com.yunho.project.calendar.core.domain.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -21,6 +22,7 @@ public class User extends BaseEntity {
 
     private LocalDate birthday;
 
+    @Builder
     public User(String name, String email, String password, LocalDate birthday) {
         this.name = name;
         this.email = email;
