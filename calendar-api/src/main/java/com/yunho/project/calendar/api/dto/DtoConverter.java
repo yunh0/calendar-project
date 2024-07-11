@@ -1,6 +1,8 @@
 package com.yunho.project.calendar.api.dto;
 
 import com.yunho.project.calendar.core.domain.entity.Schedule;
+import com.yunho.project.calendar.core.exception.CalendarException;
+import com.yunho.project.calendar.core.exception.ErrorCode;
 
 public abstract class DtoConverter {
 
@@ -31,7 +33,7 @@ public abstract class DtoConverter {
                         .writerId(schedule.getWriter().getId())
                         .build();
             default:
-                throw new RuntimeException("bad request. not matched schedule type.");
+                throw new CalendarException(ErrorCode.BAD_REQUEST);
         }
     }
 }

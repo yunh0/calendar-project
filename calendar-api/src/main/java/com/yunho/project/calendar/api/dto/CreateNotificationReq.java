@@ -1,6 +1,8 @@
 package com.yunho.project.calendar.api.dto;
 
 import com.yunho.project.calendar.core.domain.type.TimeUnit;
+import com.yunho.project.calendar.core.exception.CalendarException;
+import com.yunho.project.calendar.core.exception.ErrorCode;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -44,7 +46,7 @@ public class CreateNotificationReq {
                                 case YEAR:
                                     return notifyAt.plusYears(increment);
                                 default:
-                                    throw new RuntimeException("bad request. not matched time unit");
+                                    throw new CalendarException(ErrorCode.BAD_REQUEST);
                             }
                         }
                 )

@@ -7,6 +7,8 @@ import com.yunho.project.calendar.core.domain.entity.Engagement;
 import com.yunho.project.calendar.core.domain.entity.Schedule;
 import com.yunho.project.calendar.core.domain.entity.repository.EngagementRepository;
 import com.yunho.project.calendar.core.domain.entity.repository.ScheduleRepository;
+import com.yunho.project.calendar.core.exception.CalendarException;
+import com.yunho.project.calendar.core.exception.ErrorCode;
 import com.yunho.project.calendar.core.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -32,7 +34,7 @@ public class EventService {
                 .stream()
                 .anyMatch(e -> e.getEvent().isOverlapped(req.getStartAt(), req.getEndAt())
                         && e.getStatus() == RequestStatus.ACCEPTED)) {
-            throw new RuntimeException("cannot make engagement. period overlapped.");
+            throw new CalendarException(ErrorCode.EVENT_CREATE_OVERLAPPED_PERIOD);
         }
         final Schedule eventSchedule = Schedule.event(req.getTitle(), req.getDescription(), req.getStartAt(), req.getEndAt(), userService.getOrThrowById(authUser.getId()));
         scheduleRepository.save(eventSchedule);

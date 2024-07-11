@@ -4,6 +4,8 @@ import com.yunho.project.calendar.api.dto.LoginReq;
 import com.yunho.project.calendar.api.dto.SignUpReq;
 import com.yunho.project.calendar.core.domain.entity.User;
 import com.yunho.project.calendar.core.dto.UserCreateReq;
+import com.yunho.project.calendar.core.exception.CalendarException;
+import com.yunho.project.calendar.core.exception.ErrorCode;
 import com.yunho.project.calendar.core.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +47,7 @@ public class LoginService {
         if (user.isPresent()) {
             session.setAttribute(LOGIN_SESSION_KEY, user.get().getId());
         } else {
-            throw new RuntimeException("password or email not match");
+            throw new CalendarException(ErrorCode.PASSWORD_NOT_MATCH);
         }
     }
 
