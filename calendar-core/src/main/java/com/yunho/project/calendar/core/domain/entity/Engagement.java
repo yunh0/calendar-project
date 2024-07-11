@@ -3,6 +3,7 @@ package com.yunho.project.calendar.core.domain.entity;
 import com.yunho.project.calendar.core.domain.Event;
 import com.yunho.project.calendar.core.domain.RequestStatus;
 import com.yunho.project.calendar.core.domain.ScheduleType;
+import com.yunho.project.calendar.core.util.Period;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
@@ -49,5 +50,9 @@ public class Engagement extends BaseEntity{
 
     public boolean isOverlapped(LocalDate date) {
         return this.schedule.isOverlapped(date);
+    }
+
+    public boolean isOverlapped(Period period) {
+        return this.schedule.isOverlapped(period);
     }
 }
