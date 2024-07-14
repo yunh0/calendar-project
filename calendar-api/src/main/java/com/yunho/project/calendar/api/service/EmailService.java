@@ -1,7 +1,7 @@
 package com.yunho.project.calendar.api.service;
 
-import com.yunho.project.calendar.core.domain.entity.Engagement;
+import com.yunho.project.calendar.api.dto.EngagementEmailStuff;
 
 public interface EmailService {
-    void sendEngagement(Engagement e);
+    void sendEngagement(EngagementEmailStuff stuff);
 }

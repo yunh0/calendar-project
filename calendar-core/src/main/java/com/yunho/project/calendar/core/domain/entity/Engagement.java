@@ -3,6 +3,7 @@ package com.yunho.project.calendar.core.domain.entity;
 import com.yunho.project.calendar.core.domain.Event;
 import com.yunho.project.calendar.core.domain.RequestStatus;
 import com.yunho.project.calendar.core.domain.ScheduleType;
+import com.yunho.project.calendar.core.domain.type.RequestReplyType;
 import com.yunho.project.calendar.core.util.Period;
 import lombok.NoArgsConstructor;
 
@@ -54,5 +55,21 @@ public class Engagement extends BaseEntity{
 
     public boolean isOverlapped(Period period) {
         return this.schedule.isOverlapped(period);
+    }
+
+    public boolean isRequested() {
+        return this.status == RequestStatus.REQUESTED;
+    }
+
+    public Engagement reply(RequestReplyType type) {
+        switch (type) {
+            case ACCEPT:
+                this.status = RequestStatus.ACCEPTED;
+                break;
+            case REJECT:
+                this.status = RequestStatus.REJECTED;
+                break;
+        }
+        return this;
     }
 }

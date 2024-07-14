@@ -2,6 +2,7 @@ package com.yunho.project.calendar.core.domain;
 
 import com.yunho.project.calendar.core.domain.entity.Schedule;
 import com.yunho.project.calendar.core.domain.entity.User;
+import com.yunho.project.calendar.core.util.Period;
 
 import java.time.LocalDateTime;
 
@@ -30,5 +31,13 @@ public class Event {
 
     public boolean isOverlapped(LocalDateTime startAt, LocalDateTime endAt) {
         return this.getStartAt().isBefore(endAt) && startAt.isBefore(this.getEndAt());
+    }
+
+    public String getTitle() {
+        return schedule.getTitle();
+    }
+
+    public Period getPeriod() {
+        return Period.of(schedule.getStartAt(), schedule.getEndAt());
     }
 }
