@@ -22,7 +22,6 @@ public class SignUpReq {
     @NotBlank
     private String password;
 
-    @NotNull
     private LocalDate birthday;
 
 }
