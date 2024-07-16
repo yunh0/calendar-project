@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Builder
 @Getter
@@ -16,10 +15,7 @@ import java.time.LocalDateTime;
 @Table(name = "shares")
 @NoArgsConstructor
 @AllArgsConstructor
-public class Share {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Share extends BaseEntity {
 
     private Long fromUserId;
     private Long toUserId;
@@ -27,7 +23,6 @@ public class Share {
     private RequestStatus requestStatus;
     @Enumerated(value = EnumType.STRING)
     private Direction direction; // From 이 To 에게 요청. 단방향인 경우는 To 의 캘린더가 From 에 보인다.
-    private LocalDateTime createdAt;
 
     public Share reply(RequestReplyType type) {
         switch (type) {
