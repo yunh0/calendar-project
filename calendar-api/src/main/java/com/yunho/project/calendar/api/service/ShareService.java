@@ -1,5 +1,6 @@
 package com.yunho.project.calendar.api.service;
 
+import com.yunho.project.calendar.api.dto.AuthUser;
 import com.yunho.project.calendar.core.domain.RequestStatus;
 import com.yunho.project.calendar.core.domain.entity.Share;
 import com.yunho.project.calendar.core.domain.entity.User;
@@ -13,6 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -41,5 +45,25 @@ public class ShareService {
                 .filter(s -> s.getRequestStatus() == RequestStatus.REQUESTED)
                 .map(share -> share.reply(type))
                 .orElseThrow(() -> new CalendarException(ErrorCode.BAD_REQUEST));
+    }
+
+    @Transactional
+    public List<Long> findSharedUserIdsByUser(AuthUser authUser) {
+        return Stream.concat(
+                        shareRepository.findAllByBiDirection(
+                                        authUser.getId(),
+                                        RequestStatus.ACCEPTED,
+                                        Share.Direction.BI_DIRECTION
+                                )
+                                .stream()
+                                .map(s -> s.getToUserId().equals(authUser.getId()) ? s.getFromUserId() : s.getToUserId()),
+                        shareRepository.findAllByToUserIdAndRequestStatusAndDirection(authUser.getId(),
+                                        RequestStatus.ACCEPTED,
+                                        Share.Direction.UNI_DIRECTION
+                                )
+                                .stream()
+                                .map(Share::getFromUserId)
+                )
+                .collect(Collectors.toList());
     }
 }

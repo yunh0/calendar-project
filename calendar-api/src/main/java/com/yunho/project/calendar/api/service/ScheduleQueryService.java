@@ -3,8 +3,10 @@ package com.yunho.project.calendar.api.service;
 import com.yunho.project.calendar.api.dto.AuthUser;
 import com.yunho.project.calendar.api.dto.DtoConverter;
 import com.yunho.project.calendar.api.dto.ForListScheduleDto;
+import com.yunho.project.calendar.api.dto.SharedScheduleDto;
 import com.yunho.project.calendar.core.domain.entity.repository.EngagementRepository;
 import com.yunho.project.calendar.core.domain.entity.repository.ScheduleRepository;
+import com.yunho.project.calendar.core.service.UserService;
 import com.yunho.project.calendar.core.util.Period;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.YearMonth;
 import java.util.List;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 import static java.util.stream.Collectors.toList;
@@ -21,6 +24,8 @@ import static java.util.stream.Collectors.toList;
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class ScheduleQueryService {
+    private final UserService userService;
+    private final ShareService shareService;
     private final ScheduleRepository scheduleRepository;
     private final EngagementRepository engagementRepository;
 
@@ -52,5 +57,92 @@ public class ScheduleQueryService {
                         .filter(engagement -> engagement.isOverlapped(period))
                         .map(engagement -> DtoConverter.toForListDto(engagement.getSchedule()))
         ).collect(toList());
+    }
+
+    public List<SharedScheduleDto> getSharedSchedulesByDay(LocalDate date, AuthUser authUser) {
+        return Stream.concat(shareService.findSharedUserIdsByUser(authUser)
+                                .stream(),
+                        Stream.of(authUser.getId()))
+                .map(userId -> SharedScheduleDto.builder()
+                        .userId(userId)
+                        .name(userService.getOrThrowById(userId)
+                                .getName())
+                        .me(userId.equals(authUser.getId()))
+                        .schedules(getSchedulesByDay(date,
+                                AuthUser.of(userId)))
+                        .build()
+                )
+                .collect(toList());
+    }
+
+    public List<SharedScheduleDto> getSharedSchedulesByWeek(LocalDate startOfWeek, AuthUser authUser) {
+        return Stream.concat(shareService.findSharedUserIdsByUser(authUser)
+                                .stream(),
+                        Stream.of(authUser.getId()))
+                .map(userId -> SharedScheduleDto.builder()
+                        .userId(userId)
+                        .name(userService.getOrThrowById(userId)
+                                .getName())
+                        .me(userId.equals(authUser.getId()))
+                        .schedules(getSchedulesByWeek(startOfWeek,
+                                AuthUser.of(
+                                        userId)))
+                        .build()
+
+                )
+                .collect(toList());
+    }
+
+    public List<SharedScheduleDto> getSharedSchedulesByMonth(YearMonth yearMonth, AuthUser authUser) {
+        return Stream.concat(shareService.findSharedUserIdsByUser(authUser)
+                                .stream(),
+                        Stream.of(authUser.getId()))
+                .map(userId -> SharedScheduleDto.builder()
+                        .userId(userId)
+                        .name(userService.getOrThrowById(userId)
+                                .getName())
+                        .me(userId.equals(authUser.getId()))
+                        .schedules(getSchedulesByMonth(yearMonth,
+                                AuthUser.of(
+                                        userId)))
+                        .build()
+
+                )
+                .collect(toList());
+    }
+
+    public List<SharedScheduleDto> getSharedSchedulesByDay2(LocalDate date, AuthUser authUser) {
+        return getSharedSchedulesByFunction(authUser,
+                (Long userId) -> getSchedulesByDay(date,
+                        AuthUser.of(userId)));
+    }
+
+    public List<SharedScheduleDto> getSharedSchedulesByWeek2(LocalDate startOfWeek, AuthUser authUser) {
+        return getSharedSchedulesByFunction(authUser,
+                (Long userId) -> getSchedulesByWeek(startOfWeek,
+                        AuthUser.of(userId)));
+    }
+
+    public List<SharedScheduleDto> getSharedSchedulesByMonth2(YearMonth yearMonth, AuthUser authUser) {
+        return getSharedSchedulesByFunction(authUser,
+                (Long userId) -> getSchedulesByMonth(yearMonth,
+                        AuthUser.of(userId)));
+    }
+
+    private List<SharedScheduleDto> getSharedSchedulesByFunction(AuthUser authUser, Function<Long, List<ForListScheduleDto>> function) {
+        return Stream.concat(shareService.findSharedUserIdsByUser(authUser)
+                                .stream(),
+                        Stream.of(authUser.getId())
+                )
+                .map(userId -> SharedScheduleDto.builder()
+                        .userId(userId)
+                        .name(userService.getOrThrowById(userId)
+                                .getName())
+                        .me(userId.equals(authUser.getId()))
+                        .schedules(function.apply(userId))
+                        .build()
+
+                )
+                .collect(toList());
     }
 }
