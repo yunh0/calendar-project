@@ -15,6 +15,7 @@ import org.springframework.batch.item.database.support.SqlPagingQueryProviderFac
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
+import org.springframework.web.client.RestTemplate;
 
 import javax.sql.DataSource;
 import java.util.stream.Collectors;
@@ -151,9 +152,7 @@ public class SendEmailAlarmJobConfiguration {
 
     @Bean
     public ItemWriter<SendMailBatchReq> sendEmailAlarmWriter() {
-        return list -> log.info("write items.\n" +
-                list.stream()
-                        .map(s -> s.toString())
-                        .collect(Collectors.joining("\n")));
+        return list -> new RestTemplate()
+                .postForObject("http://localhost:8080/api/batch/send/mail", list, Object.class);
     }
 }
